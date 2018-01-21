@@ -7,7 +7,7 @@ const port = process.env.PORT || 3000; // or 3000 if we run locally
 
 hbs.registerPartials(__dirname + '/views/partials');
 hbs.registerHelper('getCurrentYear', () => {
-    return new Date()
+    return new Date().getFullYear() 
 })
 app.set('view engine', 'hbs');
 
@@ -16,7 +16,7 @@ app.use((req, res, next) =>{
     var log = `${now}: ${req.method} ${req.url}`;
     console.log(log);
     fs.appendFileSync('server.log', log + '\n');
-    res.render('maintenance.hbs');
+    next();
 });
 app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => {
@@ -35,6 +35,11 @@ app.get('/about', (req, res) => {
     });
 });
 
+app.get('/projects', (req, res) => {
+    res.render('projects.hbs', {
+        welcomeMessage: 'Projects'
+    });
+});
 app.get('/bad', (req, res) => {
     res.send({
         errorMessage: 'Unable to fullfil kesme'
